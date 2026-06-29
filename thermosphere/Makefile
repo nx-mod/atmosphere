@@ -9,7 +9,7 @@ endif
 TOPDIR ?= $(CURDIR)
 include $(DEVKITPRO)/devkitA64/base_rules
 
-AMSBRANCH := $(shell git symbolic-ref --short HEAD)
+AMSBRANCH := $(shell git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD)
 AMSREV := $(AMSBRANCH)-$(shell git rev-parse --short HEAD)
 
 ifneq (, $(strip $(shell git status --porcelain 2>/dev/null)))
