@@ -74,6 +74,10 @@ dist-no-debug: package3 $(CURRENT_DIRECTORY)/$(ATMOSPHERE_OUT_DIR)
 	cp config_templates/override_config.ini $(DIST_DIR)/atmosphere/config_templates/override_config.ini
 	cp config_templates/system_settings.ini $(DIST_DIR)/atmosphere/config_templates/system_settings.ini
 	cp config_templates/exosphere.ini $(DIST_DIR)/atmosphere/config_templates/exosphere.ini
+	cp config_templates/stratosphere.ini $(DIST_DIR)/atmosphere/config/stratosphere.ini
+	cp config_templates/override_config.ini $(DIST_DIR)/atmosphere/config/override_config.ini
+	cp config_templates/system_settings.ini $(DIST_DIR)/atmosphere/config/system_settings.ini
+	cp config_templates/exosphere.ini $(DIST_DIR)/atmosphere/config/exosphere.ini
 	mkdir -p config_templates/kip_patches
 	cp -r config_templates/kip_patches $(DIST_DIR)/atmosphere/kip_patches
 	cp -r config_templates/hbl_html $(DIST_DIR)/atmosphere/hbl_html
