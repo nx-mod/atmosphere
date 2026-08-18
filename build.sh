@@ -55,8 +55,11 @@ if [ $STATUS -eq 0 ] && [ -z "$DRYRUN" ]; then
                 SDCARD_DIR="$SCRIPT_DIR/../_SDCARD_/atmosphere"
                 rm -rf "$SDCARD_DIR"
                 mkdir -p "$SDCARD_DIR"
-                unzip -oq "$ZIP_SRC" -d "$SDCARD_DIR"
-                echo "== Extracted: $SDCARD_DIR =="
+                if unzip -oq "$ZIP_SRC" -d "$SDCARD_DIR"; then
+                    echo "== Extracted: $SDCARD_DIR =="
+                else
+                    echo "== WARNING: extraction to $SDCARD_DIR failed (unzip not installed?) =="
+                fi
             else
                 echo "== WARNING: $TARGET reported success but no out/atmosphere-*.zip found =="
             fi
