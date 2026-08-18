@@ -2,7 +2,7 @@
 # Builds Atmosphere inside the devkitPro MSYS2 shell.
 # Invoked by build.bat in this same folder (and usable standalone from msys2):
 #   bash build.sh [target] [jobs] [--dryrun]
-#     target  nx_release (default) | nx_debug | nx_audit | dist-no-debug | clean
+#     target  nx_release (default) | nx_debug | nx_audit | dist-no-debug-nx_release | clean
 #     jobs    parallel jobs, default 2
 
 source /etc/profile.d/devkit-env.sh
@@ -28,35 +28,31 @@ if [ "$TARGET" = "clean" ]; then
     exit $?
 fi
 
-# dist / dist-no-debug only exist in atmosphere.mk -- the top-level Makefile
-# only forwards nx_release/nx_debug/nx_audit (+ clean-*). Route accordingly.
-if [ "$TARGET" = "dist-no-debug" ] || [ "$TARGET" = "dist" ]; then
-    make $DRYRUN -f atmosphere.mk -j"$JOBS" "$TARGET"
-else
-    make $DRYRUN -j"$JOBS" "$TARGET"
-fi
+make $DRYRUN -j"$JOBS" "$TARGET"
 STATUS=$?
 
 if [ $STATUS -eq 0 ] && [ -z "$DRYRUN" ]; then
     echo "== Build ok. Output in out/nintendo_nx_arm64_armv8a/release/ =="
     ls -la out/nintendo_nx_arm64_armv8a/release/ 2>/dev/null
 
-    # dist-no-debug already produces a correctly-nested SD-card zip (its own
-    # recipe assembles atmosphere/ and switch/ directly under DIST_DIR and
-    # zips relative to that -- no wrapper folder). Just copy it into
-    # switch-cfw's _ZIPS_/ under our naming convention. See PACKAGING.md at
-    # the switch-cfw root.
-    if [ "$TARGET" = "dist-no-debug" ] || [ "$TARGET" = "dist" ]; then
-        ZIP_SRC="$(ls -t out/atmosphere-*.zip 2>/dev/null | head -1)"
-        if [ -n "$ZIP_SRC" ]; then
-            ZIPS_DIR="$SCRIPT_DIR/../_ZIPS_"
-            mkdir -p "$ZIPS_DIR"
-            cp "$ZIP_SRC" "$ZIPS_DIR/atmosphere-release.zip"
-            echo "== Packaged: $ZIPS_DIR/atmosphere-release.zip (from $ZIP_SRC) =="
-        else
-            echo "== WARNING: dist-no-debug reported success but no out/atmosphere-*.zip found =="
-        fi
-    fi
+    # dist-no-debug-nx_release already produces a correctly-nested SD-card zip
+    # (its own recipe assembles atmosphere/ and switch/ directly under
+    # DIST_DIR and zips relative to that -- no wrapper folder). Just copy it
+    # into switch-cfw's _ZIPS_/ under our naming convention. See
+    # PACKAGING.md at the switch-cfw root.
+    case "$TARGET" in
+        dist-no-debug*|dist)
+            ZIP_SRC="$(ls -t out/atmosphere-*.zip 2>/dev/null | head -1)"
+            if [ -n "$ZIP_SRC" ]; then
+                ZIPS_DIR="$SCRIPT_DIR/../_ZIPS_"
+                mkdir -p "$ZIPS_DIR"
+                cp "$ZIP_SRC" "$ZIPS_DIR/atmosphere-release.zip"
+                echo "== Packaged: $ZIPS_DIR/atmosphere-release.zip (from $ZIP_SRC) =="
+            else
+                echo "== WARNING: $TARGET reported success but no out/atmosphere-*.zip found =="
+            fi
+            ;;
+    esac
 fi
 
 exit $STATUS

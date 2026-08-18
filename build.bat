@@ -31,7 +31,7 @@ echo ============================================
 echo.
 echo   1) Build nx_release        (release, normal build)
 echo   2) Build nx_debug          (debug build)
-echo   3) Build + SD zip          (dist-no-debug, produces install zip + packages _ZIPS_/atmosphere-release.zip)
+echo   3) Build + SD zip          (dist-no-debug-nx_release, produces install zip + packages _ZIPS_/atmosphere-release.zip)
 echo   4) Dry run                 (shows what would be rebuilt, no compile)
 echo   5) Set job count           (currently %JOBS%)
 echo   6) Clean                   (remove all build artifacts)
@@ -42,7 +42,7 @@ set /p CHOICE="Select an option: "
 
 if "%CHOICE%"=="1" ( set "TARGET=nx_release" & goto build )
 if "%CHOICE%"=="2" ( set "TARGET=nx_debug" & goto build )
-if "%CHOICE%"=="3" ( set "TARGET=dist-no-debug" & goto build )
+if "%CHOICE%"=="3" ( set "TARGET=dist-no-debug-nx_release" & goto build )
 if "%CHOICE%"=="4" ( set "TARGET=nx_release" & set "DRYRUN=1" & goto build )
 if "%CHOICE%"=="5" goto jobs
 if "%CHOICE%"=="6" ( set "TARGET=clean" & goto build )
