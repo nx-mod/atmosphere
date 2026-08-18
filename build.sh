@@ -42,7 +42,7 @@ if [ $STATUS -eq 0 ] && [ -z "$DRYRUN" ]; then
     # PACKAGING.md at the switch-cfw root.
     case "$TARGET" in
         dist-no-debug*|dist)
-            ZIP_SRC="$(ls -t out/atmosphere-*.zip 2>/dev/null | head -1)"
+            ZIP_SRC="$(find out -maxdepth 3 -iname 'atmosphere-*.zip' -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)"
             if [ -n "$ZIP_SRC" ]; then
                 ZIPS_DIR="$SCRIPT_DIR/../_ZIPS_"
                 mkdir -p "$ZIPS_DIR"
