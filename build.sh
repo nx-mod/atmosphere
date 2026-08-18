@@ -48,6 +48,15 @@ if [ $STATUS -eq 0 ] && [ -z "$DRYRUN" ]; then
                 mkdir -p "$ZIPS_DIR"
                 cp "$ZIP_SRC" "$ZIPS_DIR/atmosphere-release.zip"
                 echo "== Packaged: $ZIPS_DIR/atmosphere-release.zip (from $ZIP_SRC) =="
+
+                # Also extract into _SDCARD_/atmosphere/ so the real SD-card
+                # layout for this project can be browsed/merged directly,
+                # without unzipping. Mirrors _ZIPS_/ per PACKAGING.md.
+                SDCARD_DIR="$SCRIPT_DIR/../_SDCARD_/atmosphere"
+                rm -rf "$SDCARD_DIR"
+                mkdir -p "$SDCARD_DIR"
+                unzip -oq "$ZIP_SRC" -d "$SDCARD_DIR"
+                echo "== Extracted: $SDCARD_DIR =="
             else
                 echo "== WARNING: $TARGET reported success but no out/atmosphere-*.zip found =="
             fi
